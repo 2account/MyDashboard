@@ -2,11 +2,11 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:dashboard/models/notes/note.dart';
+import 'package:dashboard/models/notes/notemodel.dart';
 
 /// Repository class used for accessing the SQLite database
-class NotesRepository {
-  static NotesRepository _notesRepository; // Singleton Repository
+class NoteRepository {
+  static NoteRepository _noteRepository; // Singleton Repository
   static Database _database; // Singleton Database
 
   // Table, and column names
@@ -19,18 +19,18 @@ class NotesRepository {
   String _colEdited = 'edited';
 
   // Named constructor for creating an instance of Repository
-  NotesRepository._createInstance();
+  NoteRepository._createInstance();
 
   // Factory constructor for,
   // returning an existing instance of Repository
-  factory NotesRepository() {
+  factory NoteRepository() {
     // Only create an instance of Repository
     // if it doesn't already exist
-    if (_notesRepository == null) {
-      _notesRepository = NotesRepository._createInstance();
+    if (_noteRepository == null) {
+      _noteRepository = NoteRepository._createInstance();
     }
     // Return the _repository instance
-    return _notesRepository;
+    return _noteRepository;
   }
 
   // Getter for getting the database
@@ -64,7 +64,7 @@ class NotesRepository {
   }
 
   // Create
-  Future<int> insertNoteAsync(Note note) async {
+  Future<int> insertNoteAsync(NoteModel note) async {
     // Get the database instance
     Database database = await this.database;
     // Run the Insert query
@@ -85,16 +85,16 @@ class NotesRepository {
   }
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Note List' [ List<Note> ]
-  Future<List<Note>> getNoteListAsync() async {
+  Future<List<NoteModel>> getNoteListAsync() async {
     // Get the Map List from the database
     List<Map<String, dynamic>> noteMapList = await _getNoteMapListAsync();
     // Count the number of map entries in db table
     int count = noteMapList.length;
     // Create a note list for storing the results from the Map List
-    List<Note> noteList = List<Note>();
+    List<NoteModel> noteList = List<NoteModel>();
     // For loop to create a Note List from thhe Map List
     for (int i = 0; i < count; i++) {
-      noteList.add(Note.fromMap(noteMapList[i]));
+      noteList.add(NoteModel.fromMap(noteMapList[i]));
     }
     // Return the Note List
     return noteList;
@@ -113,7 +113,7 @@ class NotesRepository {
   }
 
   // Update
-  Future<int> updateNoteAsync(Note note) async {
+  Future<int> updateNoteAsync(NoteModel note) async {
     // Get the database instance
     Database database = await this.database;
     // Run the Update query
@@ -124,7 +124,7 @@ class NotesRepository {
   }
 
   // Delete
-  Future<int> deleteNoteAsync(Note note) async {
+  Future<int> deleteNoteAsync(NoteModel note) async {
     // Get the database instance
     Database database = await this.database;
     // Run the Delete query

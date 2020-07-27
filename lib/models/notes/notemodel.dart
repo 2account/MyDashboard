@@ -1,5 +1,5 @@
 /// Class representing a note
-class Note {
+class NoteModel {
   // Fields
   int _id;
   String _title;
@@ -9,11 +9,11 @@ class Note {
   String _edited;
 
   // Constructor for object without an id
-  Note(this._title, this._content, this._category, this._created,
+  NoteModel(this._title, this._content, this._category, this._created,
       [this._edited]);
 
   // Constructor for object with an id
-  Note.withId(
+  NoteModel.withId(
       this._id, this._title, this._content, this._category, this._created,
       [this._edited]);
 
@@ -86,7 +86,7 @@ class Note {
   }
 
   // Convert a Map object into a Note
-  Note.fromMap(Map<String, dynamic> _map) {
+  NoteModel.fromMap(Map<String, dynamic> _map) {
     this._id = _map['id'];
     this._title = _map['title'];
     this._content = _map['content'];

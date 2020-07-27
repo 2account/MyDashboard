@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dashboard/models/notes/note.dart';
-import 'package:dashboard/repositories/notesrepository.dart';
+import 'package:dashboard/models/notes/notemodel.dart';
+import 'package:dashboard/repositories/notes/noterepository.dart';
 import 'package:intl/intl.dart';
 
 class NoteDetail extends StatefulWidget {
@@ -8,7 +8,7 @@ class NoteDetail extends StatefulWidget {
   NoteDetail({Key key, @required this.note, @required this.isReadOnly})
       : super(key: key);
   // Used for storing the note being edited
-  final Note note;
+  final NoteModel note;
   // Used for the textfields,
   final bool isReadOnly;
   // Create the page state
@@ -37,14 +37,14 @@ class _NoteDetailState extends State<NoteDetail> {
 
   // key
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  // Notes Repository
-  NotesRepository notesRepository = NotesRepository();
+  // Note Repository
+  NoteRepository noteRepository = NoteRepository();
   // Bool for the Title header
   bool isReadOnly;
   // Bool for checking if anything changed
   bool hasContentChanged;
   // The note itself
-  Note note;
+  NoteModel note;
 
   // Controllers
   TextEditingController titleController = TextEditingController();
@@ -322,14 +322,14 @@ class _NoteDetailState extends State<NoteDetail> {
       // If the note exists, update it
       if (note.id != null) {
         // Run the update operation
-        result = await notesRepository.updateNoteAsync(note);
+        result = await noteRepository.updateNoteAsync(note);
       }
       // If the note does not exist, insert it
       else {
         // Run the insert operation
-        result = await notesRepository.insertNoteAsync(note);
+        result = await noteRepository.insertNoteAsync(note);
         // Get the id of the insert, and set it to prevent error later
-        note.id = await notesRepository.getLastInsertedId();
+        note.id = await noteRepository.getLastInsertedId();
       }
 
       // Set content changed to false, since it just got saved

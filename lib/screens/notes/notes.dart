@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:dashboard/widgets/notes/transparentroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dashboard/models/notes/note.dart';
-import 'package:dashboard/repositories/notesrepository.dart';
-import 'package:dashboard/widgets/notes/notesdetail.dart';
+import 'package:dashboard/models/notes/notemodel.dart';
+import 'package:dashboard/repositories/notes/noterepository.dart';
+import 'package:dashboard/widgets/notes/notedetail.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NotesPage extends StatefulWidget {
@@ -41,8 +41,8 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   // Declare variables
-  NotesRepository notesRepository = NotesRepository();
-  List<Note> noteList;
+  NoteRepository noteRepository = NoteRepository();
+  List<NoteModel> noteList;
   int _count = 0;
 
   // Build the _NotesPageState Widget
@@ -50,7 +50,7 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     // Update the ListView if the noteList is empty
     if (noteList == null) {
-      noteList = List<Note>();
+      noteList = List<NoteModel>();
       _updateListView();
     }
 
@@ -73,7 +73,7 @@ class _NotesPageState extends State<NotesPage> {
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           HapticFeedback.vibrate();
-          navigateToDetail(Note('', '', '', ''), false);
+          navigateToDetail(NoteModel('', '', '', ''), false);
         },
         tooltip: 'Tilføj en note',
         child: Icon(Icons.add),
@@ -194,8 +194,8 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  void _delete(BuildContext context, Note note) async {
-    int result = await notesRepository.deleteNoteAsync(note);
+  void _delete(BuildContext context, NoteModel note) async {
+    int result = await noteRepository.deleteNoteAsync(note);
     if (result != 0) {
       _updateListView();
     }
@@ -210,7 +210,7 @@ class _NotesPageState extends State<NotesPage> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  void navigateToDetail(Note note, bool isReadOnly) async {
+  void navigateToDetail(NoteModel note, bool isReadOnly) async {
      bool result = await Navigator.of(context).push(
       TransparentRoute(
         builder: (BuildContext context) {
@@ -228,10 +228,10 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   Future<void> _updateListView() async {
-    final Future<Database> dbFuture = notesRepository.initializeDatabaseAsync();
+    final Future<Database> dbFuture = noteRepository.initializeDatabaseAsync();
     dbFuture.then(
       (database) {
-        Future<List<Note>> noteListFuture = notesRepository.getNoteListAsync();
+        Future<List<NoteModel>> noteListFuture = noteRepository.getNoteListAsync();
         noteListFuture.then(
           (noteList) {
             setState(
