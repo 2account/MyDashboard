@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
-import 'package:dashboard/widgets/DrawerNavigationTile.dart';
-import 'package:dashboard/widgets/navigationitem.dart';
+import 'package:dashboard/widgets/misc/DrawerNavigationTile.dart';
+import 'package:dashboard/widgets/misc/navigationitem.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({Key key, this.title}) : super(key: key);
