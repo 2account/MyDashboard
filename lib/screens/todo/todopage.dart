@@ -14,17 +14,17 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   List<TodoModel> todoList = [
-    TodoModel(1, 'First Item', 'First Description', false),
-    TodoModel(2, 'Second Item', 'Second Description', false),
-    TodoModel(3, 'Third Item', 'Third Description', false),
-    TodoModel(4, 'Fourth Item', 'Fourth Description', false)
+    TodoModel.withId(1, 'First Item', 'First Description', false),
+    TodoModel.withId(2, 'Second Item', 'Second Description', false),
+    TodoModel.withId(3, 'Third Item', 'Third Description', false),
+    TodoModel.withId(4, 'Fourth Item', 'Fourth Description', false)
   ];
 
   List<TodoModel> completeList = [
-    TodoModel(1, 'First Item', 'First Description', true),
-    TodoModel(2, 'Second Item', 'Second Description', true),
-    TodoModel(3, 'Third Item', 'Third Description', true),
-    TodoModel(4, 'Fourth Item', 'Fourth Description', true)
+    TodoModel.withId(1, 'First Item', 'First Description', true),
+    TodoModel.withId(2, 'Second Item', 'Second Description', true),
+    TodoModel.withId(3, 'Third Item', 'Third Description', true),
+    TodoModel.withId(4, 'Fourth Item', 'Fourth Description', true)
   ];
 
   @override
