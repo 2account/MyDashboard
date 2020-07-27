@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:dashboard/widgets/transparentroute.dart';
+import 'package:dashboard/widgets/notes/transparentroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dashboard/models/note.dart';
+import 'package:dashboard/models/notes/note.dart';
 import 'package:dashboard/repositories/notesrepository.dart';
-import 'package:dashboard/widgets/notesdetail.dart';
+import 'package:dashboard/widgets/notes/notesdetail.dart';
 import 'package:sqflite/sqflite.dart';
 
 class NotesPage extends StatefulWidget {

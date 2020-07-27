@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dashboard/screens/dashboard.dart';
-import 'package:dashboard/screens/notes.dart';
-import 'package:dashboard/screens/todos.dart';
+import 'package:dashboard/screens/notes/notes.dart';
+import 'package:dashboard/screens/todo/todopage.dart';
 
 void main() {
   runApp(FoodPlan());
