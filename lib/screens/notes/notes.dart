@@ -87,6 +87,7 @@ class _NotesPageState extends State<NotesPage> {
       itemBuilder: (BuildContext context, int position) {
         return Dismissible(
           key: UniqueKey(),
+          direction: DismissDirection.startToEnd,
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.endToStart) {
               /// edit item
@@ -128,7 +129,6 @@ class _NotesPageState extends State<NotesPage> {
                 ),
                 barrierDismissible: false,
               );
-
               return willDelete;
             }
           },
@@ -211,7 +211,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   void navigateToDetail(NoteModel note, bool isReadOnly) async {
-     bool result = await Navigator.of(context).push(
+    bool result = await Navigator.of(context).push(
       TransparentRoute(
         builder: (BuildContext context) {
           return NoteDetail(
@@ -231,7 +231,8 @@ class _NotesPageState extends State<NotesPage> {
     final Future<Database> dbFuture = noteRepository.initializeDatabaseAsync();
     dbFuture.then(
       (database) {
-        Future<List<NoteModel>> noteListFuture = noteRepository.getNoteListAsync();
+        Future<List<NoteModel>> noteListFuture =
+            noteRepository.getNoteListAsync();
         noteListFuture.then(
           (noteList) {
             setState(
