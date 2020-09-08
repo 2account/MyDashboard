@@ -172,7 +172,7 @@ class _DashboardState extends State<Dashboard> {
                   background: Color(0xFFee5253).withOpacity(0.6),
                   context: context,
                   image: "assets/images/creditcard.png",
-                  title: "Udgifter",
+                  title: "Budget",
                   onTap: () => {
                     HapticFeedback.vibrate(),
                   },

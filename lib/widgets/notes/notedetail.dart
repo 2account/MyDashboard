@@ -329,7 +329,7 @@ class _NoteDetailState extends State<NoteDetail> {
         // Run the insert operation
         result = await noteRepository.insertNoteAsync(note);
         // Get the id of the insert, and set it to prevent error later
-        note.id = await noteRepository.getLastInsertedId();
+        note.id = await noteRepository.getLastInsertedIdAsync();
       }
 
       // Set content changed to false, since it just got saved

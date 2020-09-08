@@ -48,13 +48,14 @@ class _NotesPageState extends State<NotesPage> {
   // Build the _NotesPageState Widget
   @override
   Widget build(BuildContext context) {
+    
     // Update the ListView if the noteList is empty
     if (noteList == null) {
       noteList = List<NoteModel>();
       _updateListView();
     }
 
-    // Return the Widget
+    // Returns the widget scaffold
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -81,6 +82,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
+  /// Returns a listview containing all notes in the database
   ListView getNoteListView() {
     return ListView.builder(
       itemCount: _count,
@@ -160,40 +162,53 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
+  /// Shows confirmation dialog,
+  /// for when a note is being deleted.
   void _dialog(BuildContext context, int position) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        // Title
         title: Text(
           "Slet Note",
         ),
+        // Content
         content: Text(
           "Er du sikker på du vil slette denne note?",
         ),
+        // Choices
         actions: [
+          // Yes, will delete
           FlatButton(
             child: Text(
               "Ja",
             ),
             onPressed: () => {
+              // Close dialog
               Navigator.pop(context, false),
+              // Delete note
               _delete(context, noteList[position]),
+              // Show deletion confirmation
               _showSnackBar(context, "Noten blev slettet")
             },
           ),
+          // No, wont delete
           FlatButton(
             child: Text(
               "Nej",
             ),
+            // Close dialog
             onPressed: () => Navigator.pop(context, false),
           )
         ],
         backgroundColor: Theme.of(context).backgroundColor,
       ),
+      // Dialog can't be dismissed.
       barrierDismissible: false,
     );
   }
 
+  /// Deletes a specified note in the database
   void _delete(BuildContext context, NoteModel note) async {
     int result = await noteRepository.deleteNoteAsync(note);
     if (result != 0) {
@@ -201,6 +216,7 @@ class _NotesPageState extends State<NotesPage> {
     }
   }
 
+  /// Shows the snackbar with the provided message
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(
@@ -210,6 +226,7 @@ class _NotesPageState extends State<NotesPage> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
+  /// Navigates to a specified note
   void navigateToDetail(NoteModel note, bool isReadOnly) async {
     bool result = await Navigator.of(context).push(
       TransparentRoute(
@@ -221,18 +238,18 @@ class _NotesPageState extends State<NotesPage> {
         },
       ),
     );
-
     if (result == true) {
       _updateListView();
     }
   }
 
+  /// Updates the listview containing the notes
   Future<void> _updateListView() async {
     final Future<Database> dbFuture = noteRepository.initializeDatabaseAsync();
     dbFuture.then(
       (database) {
         Future<List<NoteModel>> noteListFuture =
-            noteRepository.getNoteListAsync();
+            noteRepository.getAllNotesAsync();
         noteListFuture.then(
           (noteList) {
             setState(
