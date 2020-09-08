@@ -1,16 +1,31 @@
-# Dashboard
+Ch# MyDashboard
 
-A new Flutter project.
+*Hyggeprojekt der kunne ende med at blive en brugbar app.*
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+✔️: Implementeret.
 
-A few resources to get you started if this is your first Flutter project:
+❌: Ikke implementeret.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- Madplan (❌)
+- Indkøbsliste (❌)
+- Dagligvarer (❌)
+- Todoliste (❌)
+- Budget (❌)
+- Noter (✔️)
+- Spisesteder (❌)
+- Opskrifter (❌)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Arbejder på (Lige nu)
+#
+### Todo
+
+- Funktionelle krav
+  - Opgaver skal vises i den rækkefølge de bliver sat i, også når de bliver flyttet.
+
+- Design krav
+  - Opgaver vises i to tabs, Ikke færdige, og færdige opgaver.
+  - Opgaver flyttes automatisk imellem tabs når de bliver markeret/afmarkeret
+  - Opgaver vises på et ListView, og kan flyttes rundt ved at holde nede over en opgave.
+  - Der vises et bekræftelsesvindue når en opgave markeres som færdig.
