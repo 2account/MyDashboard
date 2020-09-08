@@ -1,4 +1,4 @@
-Ch# MyDashboard
+# MyDashboard
 
 *Hyggeprojekt der kunne ende med at blive en brugbar app.*
 
