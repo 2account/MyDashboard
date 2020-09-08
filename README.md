@@ -18,7 +18,6 @@
 - Opskrifter (❌)
 
 ## Arbejder på (Lige nu)
-#
 ### Todo
 
 - Funktionelle krav
