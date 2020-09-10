@@ -1,18 +1,15 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:dashboard/models/todo/todomodel.dart';
+import 'package:dashboard/repositories/base/repositorybase.dart';
 
-class TodoRepository {
+class TodoRepository  extends RepositoryBase {
 
   /* Fields
   -------------------------------------------------- */
 
   /// Static object for singleton repository 
   static TodoRepository _todoRepository;
-  /// Static object Singleton database
-  static Database _database;
 
   /* Table & Column names
   -------------------------------------------------- */
@@ -21,8 +18,6 @@ class TodoRepository {
   String _todoTable = "todo_table";
   // Column names
   String _colId = "id";
-  String _colTitle = "title";
-  String _colDescription = "description";
   String _colIsComplete = "isComplete";
 
   /* Constructors
@@ -43,48 +38,6 @@ class TodoRepository {
 
     // Return the _repository instance
     return _todoRepository;
-  }
-
-  /* Getters
-  -------------------------------------------------- */
-
-  // Getter for getting the database
-  Future<Database> get database async {
-
-    // If database is null, initialize it
-    if (_database == null) {
-      _database = await initializeDatabaseAsync();
-    }
-
-    // Return the database instance
-    return _database;
-  }
-
-  /* Database functions 
-  -------------------------------------------------- */
-
-  // Function for initializing the database
-  Future<Database> initializeDatabaseAsync() async {
-    // Get the directory path for both Android and iOS to store the database
-    Directory directory = await getApplicationDocumentsDirectory();
-
-    // Define the database path
-    String path = "${directory.path}todos.db";
-
-    // Open/Create the database at the given path
-    Database todos =
-        await openDatabase(path, version: 1, onCreate: _createDbAsync);
-
-    // Return the created database
-    return todos;
-  }
-
-  // Function for creating the database
-  void _createDbAsync(Database database, int newVersion) async {
-
-    // Create the new database
-    await database.execute(
-        'CREATE TABLE $_todoTable($_colId INTEGER PRIMARY KEY AUTOINCREMENT, $_colTitle TEXT, $_colDescription TEXT, $_colIsComplete BOOLEAN)');
   }
 
   /* Map Functions
@@ -159,7 +112,7 @@ class TodoRepository {
 
   // Delete
   /// Deletes an item in the database
-  Future<int> deleteNoteAsync(TodoModel todo) async {
+  Future<int> deleteAsync(TodoModel todo) async {
 
     // Get the database instance
     Database database = await this.database;
@@ -174,23 +127,6 @@ class TodoRepository {
 
   /* Other Functions
   -------------------------------------------------- */
-
-  // Get last id
-  /// Returns the id of last item inserted into the database
-  Future<int> getLastInsertedIdAsync() async {
-
-    // Get the database instance
-    Database database = await this.database;
-
-    // Run the Select query
-    List<Map<String, dynamic>> resultId = await database.rawQuery("SELECT last_insert_rowid()");
-
-    // Convert the resultCount to an int
-    int result = Sqflite.firstIntValue(resultId);
-
-    // Return the result
-    return result;
-  }
 
   // Total
   /// Returns the total count of items in the database

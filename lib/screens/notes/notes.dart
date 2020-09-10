@@ -210,7 +210,7 @@ class _NotesPageState extends State<NotesPage> {
 
   /// Deletes a specified note in the database
   void _delete(BuildContext context, NoteModel note) async {
-    int result = await noteRepository.deleteNoteAsync(note);
+    int result = await noteRepository.deleteAsync(note);
     if (result != 0) {
       _updateListView();
     }
@@ -249,7 +249,7 @@ class _NotesPageState extends State<NotesPage> {
     dbFuture.then(
       (database) {
         Future<List<NoteModel>> noteListFuture =
-            noteRepository.getAllNotesAsync();
+            noteRepository.getAllAsync();
         noteListFuture.then(
           (noteList) {
             setState(

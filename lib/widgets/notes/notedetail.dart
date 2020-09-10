@@ -322,12 +322,12 @@ class _NoteDetailState extends State<NoteDetail> {
       // If the note exists, update it
       if (note.id != null) {
         // Run the update operation
-        result = await noteRepository.updateNoteAsync(note);
+        result = await noteRepository.updateAsync(note);
       }
       // If the note does not exist, insert it
       else {
         // Run the insert operation
-        result = await noteRepository.insertNoteAsync(note);
+        result = await noteRepository.insertAsync(note);
         // Get the id of the insert, and set it to prevent error later
         note.id = await noteRepository.getLastInsertedIdAsync();
       }
