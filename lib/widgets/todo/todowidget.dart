@@ -25,19 +25,63 @@ class _TodoWidgetState extends State<TodoWidget> {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
+      // Key
       key: key,
-      value: todo.isComplete,
+      // Checkbox Value
+      value: ((todo.isComplete == "true") ? true : false),
+      // Title
       title: Text(
         "${todo.title}",
       ),
+      // Subtitle
       subtitle: Text(
         "${todo.description}",
       ),
+      // OnChanged Event
       onChanged: (bool newValue) {
-        setState(() {
-          todo.isComplete = newValue;
-        });
+        // Show dialog window
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            // Title
+            title: ((todo.isComplete == "false")
+                ? Text("Færdiggør Opgave")
+                : Text("Ufærdiggør Opgave")),
+            // Content
+            content: ((todo.isComplete == "false")
+                ? Text("Er du sikker på du er færdig med opgaven?")
+                : Text("Er du sikker på du ikke er færdig med opgaven?")),
+            // Actions
+            actions: [
+              FlatButton(
+                child: Text(
+                  "Ja",
+                ),
+                onPressed: () {
+                  // Close Window
+                  Navigator.pop(context, false);
+                  // Change isComplete
+                  setState(() {
+                    todo.isComplete = ((newValue == true) ? "true" : "false");
+                  });
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  "Nej",
+                ),
+                onPressed: () => {
+                  Navigator.pop(context, false),
+                },
+              ),
+            ],
+            // Background Color
+            backgroundColor: Theme.of(context).backgroundColor,
+          ),
+        );
       },
+      // Checkbox Placement
       controlAffinity: ListTileControlAffinity.leading,
     );
   }

@@ -15,7 +15,7 @@ class NoteRepository extends RepositoryBase {
   /* Table & Column names
   -------------------------------------------------- */
 
-  String _noteTable = 'note_table';
+  String _noteTable = 'notes';
   String _colId = 'id';
   String _colCreated = 'created';
 

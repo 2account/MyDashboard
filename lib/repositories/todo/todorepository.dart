@@ -15,7 +15,7 @@ class TodoRepository  extends RepositoryBase {
   -------------------------------------------------- */
 
   // Table name
-  String _todoTable = "todo_table";
+  String _todoTable = "todos";
   // Column names
   String _colId = "id";
   String _colIsComplete = "isComplete";

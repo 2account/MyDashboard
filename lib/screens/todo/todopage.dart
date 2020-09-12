@@ -1,7 +1,9 @@
+import 'package:dashboard/repositories/todo/todorepository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dashboard/models/todo/todomodel.dart';
 import 'package:dashboard/widgets/todo/todowidget.dart';
+import 'package:sqflite/sqflite.dart';
 
 class TodoPage extends StatefulWidget {
   TodoPage({Key key, this.title}) : super(key: key);
@@ -13,22 +15,28 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  List<TodoModel> todoList = [
-    TodoModel.withId(1, 'First Item', 'First Description', false),
-    TodoModel.withId(2, 'Second Item', 'Second Description', false),
-    TodoModel.withId(3, 'Third Item', 'Third Description', false),
-    TodoModel.withId(4, 'Fourth Item', 'Fourth Description', false)
-  ];
+  /// Object for accessing the database
+  TodoRepository repo = new TodoRepository();
 
-  List<TodoModel> completeList = [
-    TodoModel.withId(1, 'First Item', 'First Description', true),
-    TodoModel.withId(2, 'Second Item', 'Second Description', true),
-    TodoModel.withId(3, 'Third Item', 'Third Description', true),
-    TodoModel.withId(4, 'Fourth Item', 'Fourth Description', true)
-  ];
+  /// List of tasks not yet completed
+  List<TodoModel> todoList;
+
+  /// List of tasks that have been completed
+  List<TodoModel> doneList;
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the lists if they are null
+    if (todoList == null && doneList == null) {
+      // Initialize lists
+      todoList = List<TodoModel>();
+      doneList = List<TodoModel>();
+
+      // Load the todo items from the database
+      _loadTodoItems();
+    }
+
+    // Return widget element
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -55,10 +63,7 @@ class _TodoPageState extends State<TodoPage> {
                   onReorder: _onReorder,
                   children: todoList.map(
                     (todo) {
-                      return TodoWidget(
-                        key: Key("${todo.id}"),
-                        todo: todo,
-                      );
+                      return TodoWidget(key: Key("${todo.id}"), todo: todo);
                     },
                   ).toList(),
                 ),
@@ -68,7 +73,7 @@ class _TodoPageState extends State<TodoPage> {
               child: Center(
                 child: ReorderableListView(
                   onReorder: _onReorder,
-                  children: completeList.map(
+                  children: doneList.map(
                     (todo) {
                       return TodoWidget(
                         key: Key("${todo.id}"),
@@ -85,8 +90,11 @@ class _TodoPageState extends State<TodoPage> {
           child: Icon(
             Icons.add,
           ),
-          onPressed: () => {
-            HapticFeedback.vibrate(),
+          onPressed: () async {
+            HapticFeedback.vibrate();
+
+            // int result = await repo.insertAsync(
+            //     new TodoModel("Test Todo", "Testing todo", "true"));
           },
         ),
       ),
@@ -95,22 +103,48 @@ class _TodoPageState extends State<TodoPage> {
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
+      // Set new index value
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
+      // Remove old index item
       final TodoModel item = todoList.removeAt(oldIndex);
+      // Insert item at new index
       todoList.insert(newIndex, item);
     });
   }
 
-  Widget buildBody() {
-    return ReorderableListView(
-      children: todoList.map((todo) {
-        return TodoWidget(
-          todo: todo,
+  Future<void> _loadTodoItems() async {
+    // Initialize the database
+    final Future<Database> dbFuture = repo.initializeDatabaseAsync();
+
+    // When the database has been initialized
+    dbFuture.then(
+      (database) {
+        // Get all items
+        Future<List<TodoModel>> noteListFuture = repo.getAllAsync();
+
+        // When all items has been retrieved
+        noteListFuture.then(
+          (resultList) {
+            setState(
+              () {
+                // Check each item
+                resultList.forEach((item) {
+                  // Add to doneList if complete
+                  if (item.isComplete == "true") {
+                    doneList.add(item);
+                  } 
+                  // Add to todoList if uncomplete
+                  else {
+                    todoList.add(item);
+                  }
+                });
+              },
+            );
+          },
         );
-      }).toList(),
-      onReorder: _onReorder,
+      },
     );
   }
 }

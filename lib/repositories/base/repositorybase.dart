@@ -35,7 +35,7 @@ class RepositoryBase {
     Directory directory = await getApplicationDocumentsDirectory();
 
     // Define the database path
-    String path = "${directory.path}mydashboard.db";
+    String path = "${directory.path}/mydashboard.db";
 
     // Open/Create the database at the given path
     Database mydashboard =
@@ -50,7 +50,7 @@ class RepositoryBase {
 
 
     // Notes
-    String _noteTable = 'note_table';
+    String _noteTable = 'notes';
     String _colId = 'id';
     String _colTitle = 'title';
     String _colContent = 'content';
@@ -59,15 +59,18 @@ class RepositoryBase {
     String _colEdited = 'edited';
 
     // Todo 
-    String _todoTable = "todo_table";
+    String _todoTable = "todos";
     String _colDescription = "description";
     String _colIsComplete = "isComplete";
 
 
-    // Create the new database
+    // Create notes database
     await database.execute(
-        'CREATE TABLE $_noteTable($_colId INTEGER PRIMARY KEY AUTOINCREMENT, $_colTitle TEXT, $_colContent TEXT, $_colCategory TEXT, $_colCreated TEXT, $_colEdited TEXT);' +
-        'CREATE TABLE $_todoTable($_colId INTEGER PRIMARY KEY AUTOINCREMENT, $_colTitle TEXT, $_colDescription TEXT, $_colIsComplete BOOLEAN)');
+      'CREATE TABLE $_noteTable($_colId INTEGER PRIMARY KEY AUTOINCREMENT, $_colTitle TEXT, $_colContent TEXT, $_colCategory TEXT, $_colCreated TEXT, $_colEdited TEXT)');
+
+    // Create todo database
+    await database.execute(
+      'CREATE TABLE $_todoTable($_colId INTEGER PRIMARY KEY AUTOINCREMENT, $_colTitle TEXT, $_colDescription TEXT, $_colIsComplete BOOLEAN)');
   }
 
   /* Other Functions

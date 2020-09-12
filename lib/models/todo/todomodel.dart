@@ -11,7 +11,7 @@ class TodoModel {
   /// Description of the task
   String _description;
   /// Task completion
-  bool _isComplete;
+  String _isComplete;
 
   /*
       Constructors
@@ -43,7 +43,7 @@ class TodoModel {
   }
 
   /// Gets the completion of the task
-  bool get isComplete {
+  String get isComplete {
     return this._isComplete;
   }
 
@@ -67,7 +67,7 @@ class TodoModel {
   }
 
   /// Sets the completion of the task
-  set isComplete(bool isComplete) {
+  set isComplete(String isComplete) {
     this._isComplete = isComplete;
   }
 
