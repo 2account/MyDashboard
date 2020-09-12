@@ -92,16 +92,15 @@ class _TodoPageState extends State<TodoPage> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-
-            // int result = await repo.insertAsync(
-            //     new TodoModel("Test Todo", "Testing todo", "true"));
           },
         ),
       ),
     );
   }
 
+  /// Reorders items
   void _onReorder(int oldIndex, int newIndex) {
+    // Notify state change
     setState(() {
       // Set new index value
       if (newIndex > oldIndex) {
@@ -114,19 +113,23 @@ class _TodoPageState extends State<TodoPage> {
     });
   }
 
+  /// Loads the todo items from the database
   Future<void> _loadTodoItems() async {
     // Initialize the database
     final Future<Database> dbFuture = repo.initializeDatabaseAsync();
 
     // When the database has been initialized
     dbFuture.then(
+      // Database parameter
       (database) {
         // Get all items
         Future<List<TodoModel>> noteListFuture = repo.getAllAsync();
 
         // When all items has been retrieved
         noteListFuture.then(
+          // Result parameter
           (resultList) {
+            // Notify state change
             setState(
               () {
                 // Check each item
