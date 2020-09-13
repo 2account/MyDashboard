@@ -1,6 +1,5 @@
 import 'package:dashboard/repositories/todo/todorepository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:dashboard/models/todo/todomodel.dart';
 import 'package:dashboard/widgets/todo/todowidget.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,6 +14,9 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   /// Object for accessing the database
   TodoRepository repo = new TodoRepository();
 
@@ -90,12 +92,54 @@ class _TodoPageState extends State<TodoPage> {
           child: Icon(
             Icons.add,
           ),
-          onPressed: () async {
-            HapticFeedback.vibrate();
-          },
+          onPressed: () => _showAddItemDialog(context),
         ),
       ),
     );
+  }
+
+  /// Shows the dialog for adding a task
+  void _showAddItemDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          actions: [
+            FlatButton(
+              child: Text("Tilføj"),
+              onPressed: () => _addItem(),
+            )
+          ],
+          content: Container(
+            height: 120,
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: "Titel",
+                  ),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: "Beskrivelse",
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // TODO: Implement addItem function
+  void _addItem() {
+    repo.insertAsync(
+        TodoModel(titleController.text, descriptionController.text, "false"));
   }
 
   /// Reorders items
@@ -137,7 +181,7 @@ class _TodoPageState extends State<TodoPage> {
                   // Add to doneList if complete
                   if (item.isComplete == "true") {
                     doneList.add(item);
-                  } 
+                  }
                   // Add to todoList if uncomplete
                   else {
                     todoList.add(item);
