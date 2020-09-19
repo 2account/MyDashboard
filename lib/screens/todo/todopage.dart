@@ -65,7 +65,85 @@ class _TodoPageState extends State<TodoPage> {
                   onReorder: _onReorder,
                   children: todoList.map(
                     (todo) {
-                      return TodoWidget(key: Key("${todo.id}"), todo: todo);
+                      return CheckboxListTile(
+                        // Key
+                        key: Key("${todo.id}"),
+                        // Checkbox Value
+                        value: ((todo.isComplete == "true") ? true : false),
+                        // Title
+                        title: Text(
+                          "${todo.title}",
+                        ),
+                        // Subtitle
+                        subtitle: Text(
+                          "${todo.description}",
+                        ),
+                        // OnChanged Event
+                        onChanged: (bool newValue) {
+                          // Show dialog window
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => AlertDialog(
+                              // Title
+                              title: ((todo.isComplete == "false")
+                                  ? Text("Færdiggør Opgave")
+                                  : Text("Ufærdiggør Opgave")),
+                              // Content
+                              content: ((todo.isComplete == "false")
+                                  ? Text(
+                                      "Er du sikker på du er færdig med opgaven?")
+                                  : Text(
+                                      "Er du sikker på du ikke er færdig med opgaven?")),
+                              // Actions
+                              actions: [
+                                FlatButton(
+                                  child: Text(
+                                    "Ja",
+                                  ),
+                                  onPressed: () async {
+                                    // Close dialog
+                                    Navigator.pop(context, false);
+
+                                    // Change isComplete
+                                    todo.isComplete =
+                                        ((newValue == true) ? "true" : "false");
+
+                                    // Check if isComplete is true
+                                    if (todo.isComplete == "true") {
+                                      // Update item in the database
+                                      int result = await repo.updateAsync(todo);
+
+                                      // Check result
+                                      if (result != 0) {
+                                        // Update the lists
+                                        setState(() {
+                                          todoList.remove(todo);
+
+                                          doneList.add(todo);
+                                        });
+                                      }
+                                    }
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    "Nej",
+                                  ),
+                                  onPressed: () => {
+                                    Navigator.pop(context, false),
+                                  },
+                                ),
+                              ],
+                              // Background Color
+                              backgroundColor:
+                                  Theme.of(context).backgroundColor,
+                            ),
+                          );
+                        },
+                        // Checkbox Placement
+                        controlAffinity: ListTileControlAffinity.leading,
+                      );
                     },
                   ).toList(),
                 ),
@@ -77,9 +155,84 @@ class _TodoPageState extends State<TodoPage> {
                   onReorder: _onReorder,
                   children: doneList.map(
                     (todo) {
-                      return TodoWidget(
+                      return CheckboxListTile(
+                        // Key
                         key: Key("${todo.id}"),
-                        todo: todo,
+                        // Checkbox Value
+                        value: ((todo.isComplete == "true") ? true : false),
+                        // Title
+                        title: Text(
+                          "${todo.title}",
+                        ),
+                        // Subtitle
+                        subtitle: Text(
+                          "${todo.description}",
+                        ),
+                        // OnChanged Event
+                        onChanged: (bool newValue) {
+                          // Show dialog window
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => AlertDialog(
+                              // Title
+                              title: ((todo.isComplete == "false")
+                                  ? Text("Færdiggør Opgave")
+                                  : Text("Ufærdiggør Opgave")),
+                              // Content
+                              content: ((todo.isComplete == "false")
+                                  ? Text(
+                                      "Er du sikker på du er færdig med opgaven?")
+                                  : Text(
+                                      "Er du sikker på du ikke er færdig med opgaven?")),
+                              // Actions
+                              actions: [
+                                FlatButton(
+                                  child: Text(
+                                    "Ja",
+                                  ),
+                                  onPressed: () async {
+                                    // Close dialog
+                                    Navigator.pop(context, false);
+
+                                    // Change isComplete
+                                    todo.isComplete =
+                                        ((newValue == true) ? "true" : "false");
+
+                                    // Check if isComplete is true
+                                    if (todo.isComplete == "false") {
+                                      // Update item in the database
+                                      int result = await repo.updateAsync(todo);
+
+                                      // Check result
+                                      if (result != 0) {
+                                        // Update the lists
+                                        setState(() {
+                                          doneList.remove(todo);
+
+                                          todoList.add(todo);
+                                        });
+                                      }
+                                    }
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    "Nej",
+                                  ),
+                                  onPressed: () => {
+                                    Navigator.pop(context, false),
+                                  },
+                                ),
+                              ],
+                              // Background Color
+                              backgroundColor:
+                                  Theme.of(context).backgroundColor,
+                            ),
+                          );
+                        },
+                        // Checkbox Placement
+                        controlAffinity: ListTileControlAffinity.leading,
                       );
                     },
                   ).toList(),
@@ -136,10 +289,29 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
-  // TODO: Implement addItem function
-  void _addItem() {
-    repo.insertAsync(
-        TodoModel(titleController.text, descriptionController.text, "false"));
+  /// Adds a task to the database
+  void _addItem() async {
+    // Create new task object with the textfield values
+    TodoModel newModel = new TodoModel(
+        titleController.text, descriptionController.text, "false");
+
+    // Insert the new task into the database
+    int result = await repo.insertAsync(newModel);
+
+    // Check if the insertion was successful
+    if (result != 0) {
+      // Pop the dialog box
+      Navigator.of(context).pop();
+
+      // Get the id of the inserted task
+      newModel.id = await repo.getLastInsertedIdAsync();
+
+      // Tell the framework something has changed
+      setState(() {
+        // Add the new model to the todolist
+        todoList.add(newModel);
+      });
+    }
   }
 
   /// Reorders items
