@@ -3,21 +3,24 @@ import 'package:dashboard/models/todo/todomodel.dart';
 
 class TodoWidget extends StatefulWidget {
   // Constructor
-  TodoWidget({Key key, this.todo}) : super(key: key);
+  TodoWidget({Key key, this.todo, this.onPressed}) : super(key: key);
 
   // Field
   final TodoModel todo;
 
+  final VoidCallback onPressed;
+
   // Override
   @override
-  _TodoWidgetState createState() => _TodoWidgetState(todo, key);
+  _TodoWidgetState createState() => _TodoWidgetState(todo, key, onPressed);
 }
 
 class _TodoWidgetState extends State<TodoWidget> {
   // Constructor
-  _TodoWidgetState(this.todo, this.key) : super();
+  _TodoWidgetState(this.todo, this.key, this.onPressed) : super();
 
   // Fields
+  final Function() onPressed;
   TodoModel todo;
   Key key;
 
@@ -59,12 +62,10 @@ class _TodoWidgetState extends State<TodoWidget> {
                   "Ja",
                 ),
                 onPressed: () {
-                  // Close Window
-                  Navigator.pop(context, false);
                   // Change isComplete
-                  setState(() {
-                    todo.isComplete = ((newValue == true) ? "true" : "false");
-                  });
+                  todo.isComplete = ((newValue == true) ? "true" : "false");
+
+                  onPressed();
                 },
               ),
               FlatButton(
