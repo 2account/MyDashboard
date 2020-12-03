@@ -2,6 +2,8 @@
 
 *Hyggeprojekt der kunne ende med at blive en brugbar app.*
 
+![MyDashboard](https://media.discordapp.net/attachments/690923137877016646/784180130389164112/unknown.png)
+
 ## Features
 
 ✔️: Implementeret.
