@@ -21,7 +21,9 @@
 ### Todo
 
 - Funktionelle krav
-  - Opgaver skal vises i den rækkefølge de bliver sat i, også når de bliver flyttet.
+  - Opgaver skal vises i den rækkefølge de bliver sat i, også når de bliver flyttet. ✔️
+  - Opgaver skal kunne slettes igen fra en af listerne.
+  - Opgaver skal kunne redigeres efter oprettelse.
 
 - Design krav
   - Opgaver vises i to tabs, Ikke færdige, og færdige opgaver.
