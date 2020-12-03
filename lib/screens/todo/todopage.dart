@@ -62,7 +62,7 @@ class _TodoPageState extends State<TodoPage> {
             Container(
               child: Center(
                 child: ReorderableListView(
-                  onReorder: _onReorder,
+                  onReorder: _onReorderUncomplete,
                   children: todoList.map(
                     (todo) {
                       return TodoWidget(
@@ -97,7 +97,7 @@ class _TodoPageState extends State<TodoPage> {
             Container(
               child: Center(
                 child: ReorderableListView(
-                  onReorder: _onReorder,
+                  onReorder: _onReordercomplete,
                   children: doneList.map(
                     (todo) {
                       return TodoWidget(
@@ -185,6 +185,9 @@ class _TodoPageState extends State<TodoPage> {
     TodoModel newModel = new TodoModel(
         titleController.text, descriptionController.text, "false");
 
+    titleController.text = "";
+    descriptionController.text = "";
+
     // Insert the new task into the database
     int result = await repo.insertAsync(newModel);
 
@@ -204,18 +207,82 @@ class _TodoPageState extends State<TodoPage> {
     }
   }
 
-  /// Reorders items
-  void _onReorder(int oldIndex, int newIndex) {
-    // Notify state change
+// TODO: Find a way to avoid duplicate reorder functions
+  void _onReorderUncomplete(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
     setState(() {
-      // Set new index value
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
+      TodoModel todo = todoList[oldIndex];
+
+      todoList.removeAt(oldIndex);
+      todoList.insert(newIndex, todo);
+    });
+
+    // This is so shit & resource heavy
+    todoList.asMap().forEach((index, task) {
+      // Set task.id to the index
+      task.id = index + 1;
+    });
+
+    todoList.forEach((task) {
+      debugPrint(
+          "ID: ${task.id} Title: ${task.title} Description: ${task.description} isComplete: ${task.isComplete}");
+    });
+
+    todoList.forEach((task) async {
+      // Int for checking result
+      int result;
+
+      // Update task
+      result = await repo.updateAsync(task);
+
+      // Check result
+      if (result != 0) {
+        // Print values
+        debugPrint(
+            "ID: ${task.id} Title: ${task.title} Description: ${task.description} isComplete: ${task.isComplete}");
       }
-      // Remove old index item
-      final TodoModel item = todoList.removeAt(oldIndex);
-      // Insert item at new index
-      todoList.insert(newIndex, item);
+    });
+  }
+
+  void _onReordercomplete(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    setState(() {
+      TodoModel todo = doneList[oldIndex];
+
+      doneList.removeAt(oldIndex);
+      doneList.insert(newIndex, todo);
+    });
+
+    // This is so shit & resource heavy
+    doneList.asMap().forEach((index, task) {
+      // Set task.id to the index
+      task.id = index + 1;
+    });
+
+    doneList.forEach((task) {
+      debugPrint(
+          "ID: ${task.id} Title: ${task.title} Description: ${task.description} isComplete: ${task.isComplete}");
+    });
+
+    doneList.forEach((task) async {
+      // Int for checking result
+      int result;
+
+      // Update task
+      result = await repo.updateAsync(task);
+
+      // Check result
+      if (result != 0) {
+        // Print values
+        debugPrint(
+            "ID: ${task.id} Title: ${task.title} Description: ${task.description} isComplete: ${task.isComplete}");
+      }
     });
   }
 
